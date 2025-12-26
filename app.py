@@ -110,7 +110,7 @@ if check_password():
                 else:
                     st.info("No ragas found. Try another spelling!")
 
-        # --- TAB 2: SEARCH BY SONG (FIXED: No video until selected!) ---
+        # --- TAB 2: SEARCH BY SONG (STRICT FIX) ---
         with tab2:
             st.header("Find Raga by Song")
             song_search = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
@@ -123,16 +123,16 @@ if check_password():
                     
                     st.success(f"Found {len(song_results)} matches.")
                     
-                    # --- NEW LOGIC: index=None makes it empty by default ---
+                    # --- THE FIX: DYNAMIC KEY ---
+                    # We add 'song_search' to the key. This forces a RESET every time you type a new letter.
                     selected_option = st.selectbox(
                         "👇 Select a song from the list to see details:", 
                         display_options, 
-                        index=None,  # <--- This keeps it empty initially
+                        index=None,  
                         placeholder="Choose a song...",
-                        key="song_select_dropdown"
+                        key=f"select_{song_search}"  # <--- This is the magic change
                     )
                     
-                    # Only run this part IF the user has actually selected something
                     if selected_option:
                         selection_index = display_options.index(selected_option)
                         selected_row = song_results.iloc[selection_index]
