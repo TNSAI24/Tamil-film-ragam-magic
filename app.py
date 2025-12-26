@@ -110,48 +110,45 @@ if check_password():
                 else:
                     st.info("No ragas found. Try another spelling!")
 
-        # --- TAB 2: SEARCH BY SONG (NEW DROPDOWN LOGIC!) ---
+        # --- TAB 2: SEARCH BY SONG (FIXED: No video until selected!) ---
         with tab2:
             st.header("Find Raga by Song")
             song_search = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
             
             if song_search:
-                # Find matches
                 song_results = df[df['The Song'].str.contains(song_search, case=False, na=False)]
                 
                 if not song_results.empty:
-                    # Create a unique list of strings like "Song Name (Film Name)" for the dropdown
-                    # This helps distinguish if two songs have the same name
                     display_options = [f"{row['The Song']} (Movie: {row['The Film Name']})" for index, row in song_results.iterrows()]
                     
-                    st.success(f"Found {len(song_results)} matches. Select one below:")
+                    st.success(f"Found {len(song_results)} matches.")
                     
-                    # The Dropdown
-                    selected_option = st.selectbox("Select the specific song:", display_options, key="song_select_dropdown")
+                    # --- NEW LOGIC: index=None makes it empty by default ---
+                    selected_option = st.selectbox(
+                        "👇 Select a song from the list to see details:", 
+                        display_options, 
+                        index=None,  # <--- This keeps it empty initially
+                        placeholder="Choose a song...",
+                        key="song_select_dropdown"
+                    )
                     
-                    # Extract the selected row based on selection index
-                    # (We find the index in the list, then grab that row from the dataframe)
-                    selection_index = display_options.index(selected_option)
-                    selected_row = song_results.iloc[selection_index]
-                    
-                    st.divider()
-                    
-                    # Display Details (Clean 2-Column Layout)
-                    c1, c2 = st.columns([3, 2])
-                    
-                    with c1:
-                        # Video Player
-                        link = str(selected_row['Video Link'])
-                        if "http" in link:
-                            st.video(link)
-                        else:
-                            st.info("🔸 No Video Available")
-                            
-                    with c2:
-                        # Song Details
-                        st.subheader(f"🎵 {selected_row['The Song']}")
-                        st.markdown(f"### **Raga: {selected_row['The Ragam']}**")
-                        st.write(f"🎬 **Film:** {selected_row['The Film Name']}")
+                    # Only run this part IF the user has actually selected something
+                    if selected_option:
+                        selection_index = display_options.index(selected_option)
+                        selected_row = song_results.iloc[selection_index]
+                        
+                        st.divider()
+                        c1, c2 = st.columns([3, 2])
+                        with c1:
+                            link = str(selected_row['Video Link'])
+                            if "http" in link:
+                                st.video(link)
+                            else:
+                                st.info("🔸 No Video Available")
+                        with c2:
+                            st.subheader(f"🎵 {selected_row['The Song']}")
+                            st.markdown(f"### **Raga: {selected_row['The Ragam']}**")
+                            st.write(f"🎬 **Film:** {selected_row['The Film Name']}")
                         
                 else:
                     st.warning("No songs found. Try a different keyword.")
