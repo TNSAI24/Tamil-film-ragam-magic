@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: ADD BACKGROUND IMAGE ---
+# --- STYLE FUNCTION: DARK MODE FIX INCLUDED ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -18,20 +18,18 @@ def add_bg_from_local(image_file):
             background-image: url(data:image/jpg;base64,{encoded_string.decode()});
             background-size: cover;
         }}
-        /* FIX: Force text to be BLACK inside the white boxes */
+        /* FIX: Force text to be BLACK inside the white boxes (for Dark Mode users) */
         .stMarkdown, .stHeader {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
-            color: black !important; 
+            color: black !important;
         }}
-        /* FIX: Target the Expander Headers specifically */
         .streamlit-expanderHeader {{
             background-color: rgba(255, 255, 255, 0.9) !important;
             color: black !important;
             border-radius: 10px;
         }}
-        /* FIX: Target the content inside Expanders */
         .stExpander {{
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
@@ -43,25 +41,23 @@ def add_bg_from_local(image_file):
         )
     except FileNotFoundError:
         st.warning(f"⚠️ Could not find {image_file}. Please ensure 'background.jpg' is uploaded to GitHub.")
-# 2. PASSWORD CHECK
+
+# 2. PASSWORD CHECK (With Space Fix)
 def check_password():
     """Returns `True` if the user had the correct password."""
     def password_entered():
-        if st.session_state["password"] == "Raja123":
+        # .strip() removes accidental spaces from mobile keyboards
+        if st.session_state["password"].strip() == "Raja123":
             st.session_state["password_correct"] = True
-            del st.session_state["password"]  # Don't store password
+            del st.session_state["password"]
         else:
             st.session_state["password_correct"] = False
 
     if "password_correct" not in st.session_state:
-        st.text_input(
-            "Please enter the Magic Password:", type="password", on_change=password_entered, key="password"
-        )
+        st.text_input("Please enter the Magic Password:", type="password", on_change=password_entered, key="password")
         return False
     elif not st.session_state["password_correct"]:
-        st.text_input(
-            "Please enter the Magic Password:", type="password", on_change=password_entered, key="password"
-        )
+        st.text_input("Please enter the Magic Password:", type="password", on_change=password_entered, key="password")
         st.error("😕 Access Denied. Try again.")
         return False
     else:
@@ -87,7 +83,7 @@ if check_password():
 
         tab1, tab2, tab3 = st.tabs(["🔎 Search by Raga", "🎵 Search by Song", "🧠 Quiz"])
 
-        # --- TAB 1: SEARCH BY RAGA ---
+        # --- TAB 1: SEARCH BY RAGA (FIXED: index=None) ---
         with tab1:
             st.header("Find Songs by Raga")
             search_term = st.text_input("Type a Raga Name (e.g., 'Kalyani')", placeholder="Type here...")
@@ -101,25 +97,35 @@ if check_password():
                         subset = results[results['The Ragam'] == raga_name]
                         with st.expander(f"🎼 **{raga_name}** ({len(subset)} songs)", expanded=False):
                             song_titles = subset['The Song'].tolist()
-                            selected_song_title = st.selectbox(f"Select a song in {raga_name}:", song_titles, key=f"sel_{raga_name}")
                             
-                            selected_row = subset[subset['The Song'] == selected_song_title].iloc[0]
-                            st.divider()
-                            c1, c2 = st.columns([3, 2])
-                            with c1:
-                                link = str(selected_row['Video Link'])
-                                if "http" in link:
-                                    st.video(link)
-                                else:
-                                    st.info("🔸 No Video Available")
-                            with c2:
-                                st.subheader(selected_row['The Song'])
-                                st.write(f"🎬 **Film:** {selected_row['The Film Name']}")
-                                st.caption(f"🎶 Raga: {selected_row['The Ragam']}")
+                            # THE FIX: Added index=None and placeholder
+                            selected_song_title = st.selectbox(
+                                f"Select a song in {raga_name}:", 
+                                song_titles, 
+                                index=None, 
+                                placeholder="Choose a song...",
+                                key=f"sel_{raga_name}"
+                            )
+                            
+                            # Only show video IF the user has selected a song
+                            if selected_song_title:
+                                selected_row = subset[subset['The Song'] == selected_song_title].iloc[0]
+                                st.divider()
+                                c1, c2 = st.columns([3, 2])
+                                with c1:
+                                    link = str(selected_row['Video Link'])
+                                    if "http" in link:
+                                        st.video(link)
+                                    else:
+                                        st.info("🔸 No Video Available")
+                                with c2:
+                                    st.subheader(selected_row['The Song'])
+                                    st.write(f"🎬 **Film:** {selected_row['The Film Name']}")
+                                    st.caption(f"🎶 Raga: {selected_row['The Ragam']}")
                 else:
                     st.info("No ragas found. Try another spelling!")
 
-        # --- TAB 2: SEARCH BY SONG (STRICT FIX) ---
+        # --- TAB 2: SEARCH BY SONG (Dynamic Key Fix) ---
         with tab2:
             st.header("Find Raga by Song")
             song_search = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
@@ -132,14 +138,12 @@ if check_password():
                     
                     st.success(f"Found {len(song_results)} matches.")
                     
-                    # --- THE FIX: DYNAMIC KEY ---
-                    # We add 'song_search' to the key. This forces a RESET every time you type a new letter.
                     selected_option = st.selectbox(
                         "👇 Select a song from the list to see details:", 
                         display_options, 
                         index=None,  
                         placeholder="Choose a song...",
-                        key=f"select_{song_search}"  # <--- This is the magic change
+                        key=f"select_{song_search}"
                     )
                     
                     if selected_option:
