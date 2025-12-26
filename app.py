@@ -18,14 +18,24 @@ def add_bg_from_local(image_file):
             background-image: url(data:image/jpg;base64,{encoded_string.decode()});
             background-size: cover;
         }}
+        /* FIX: Force text to be BLACK inside the white boxes */
         .stMarkdown, .stHeader {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
+            color: black !important; 
         }}
+        /* FIX: Target the Expander Headers specifically */
+        .streamlit-expanderHeader {{
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            color: black !important;
+            border-radius: 10px;
+        }}
+        /* FIX: Target the content inside Expanders */
         .stExpander {{
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
+            color: black !important;
         }}
         </style>
         """,
@@ -33,7 +43,6 @@ def add_bg_from_local(image_file):
         )
     except FileNotFoundError:
         st.warning(f"⚠️ Could not find {image_file}. Please ensure 'background.jpg' is uploaded to GitHub.")
-
 # 2. PASSWORD CHECK
 def check_password():
     """Returns `True` if the user had the correct password."""
