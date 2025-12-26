@@ -20,8 +20,12 @@ def add_bg_from_local(image_file):
         }}
         /* Make text backgrounds semi-transparent so they are readable */
         .stMarkdown, .stHeader {{
-            background-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
+            border-radius: 10px;
+        }}
+        .stExpander {{
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
         }}
         </style>
@@ -57,7 +61,7 @@ def check_password():
         return True
 
 if check_password():
-    # Load Background (Make sure the file name matches exactly!)
+    # Load Background (Ensure 'background.jpg' is in your GitHub repo)
     add_bg_from_local('background.jpg')
 
     # 3. LOAD DATA
@@ -74,10 +78,10 @@ if check_password():
         st.title("🎵 Tamil Film Ragam Magic")
         st.markdown("**Discover the Ragas behind the melodies.**")
 
-        # THREE TABS NOW
+        # THREE TABS
         tab1, tab2, tab3 = st.tabs(["🔎 Search by Raga", "🎵 Search by Song", "🧠 Quiz"])
 
-        # --- TAB 1: SEARCH BY RAGA ---
+        # --- TAB 1: SEARCH BY RAGA (Grouped) ---
         with tab1:
             st.header("Find Songs by Raga")
             search_term = st.text_input("Type a Raga Name (e.g., 'Kalyani')", placeholder="Type here...")
@@ -109,13 +113,12 @@ if check_password():
                 else:
                     st.info("No ragas found. Try another spelling!")
 
-        # --- TAB 2: SEARCH BY SONG (RESTORED!) ---
+        # --- TAB 2: SEARCH BY SONG (Restored!) ---
         with tab2:
             st.header("Find Raga by Song")
             song_search = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
             
             if song_search:
-                # Search in 'The Song' column
                 song_results = df[df['The Song'].str.contains(song_search, case=False, na=False)]
                 
                 if not song_results.empty:
@@ -132,7 +135,7 @@ if check_password():
                 else:
                     st.warning("No songs found. Try a different keyword.")
 
-        # --- TAB 3: QUIZ ---
+        # --- TAB 3: QUIZ (With Hints) ---
         with tab3:
             st.header("Test Your Ear!")
             if st.button("🎲 Play New Mystery Song"):
@@ -149,7 +152,7 @@ if check_password():
                 
                 st.video(song['Video Link'])
                 
-                # Generate Hints
+                # Logic for Hints
                 if 'quiz_options' not in st.session_state:
                     all_ragas = df['The Ragam'].unique().tolist()
                     possible_wrongs = [r for r in all_ragas if r != correct_raga and r != 'nan']
