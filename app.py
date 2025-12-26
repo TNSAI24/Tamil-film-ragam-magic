@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: DARK MODE FIX INCLUDED ---
+# --- STYLE FUNCTION ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -18,7 +18,7 @@ def add_bg_from_local(image_file):
             background-image: url(data:image/jpg;base64,{encoded_string.decode()});
             background-size: cover;
         }}
-        /* FIX: Force text to be BLACK inside the white boxes (for Dark Mode users) */
+        /* FIX: Force text to be BLACK inside the white boxes */
         .stMarkdown, .stHeader {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
@@ -42,11 +42,9 @@ def add_bg_from_local(image_file):
     except FileNotFoundError:
         st.warning(f"⚠️ Could not find {image_file}. Please ensure 'background.jpg' is uploaded to GitHub.")
 
-# 2. PASSWORD CHECK (With Space Fix)
+# 2. PASSWORD CHECK
 def check_password():
-    """Returns `True` if the user had the correct password."""
     def password_entered():
-        # .strip() removes accidental spaces from mobile keyboards
         if st.session_state["password"].strip() == "Raja123":
             st.session_state["password_correct"] = True
             del st.session_state["password"]
@@ -83,7 +81,7 @@ if check_password():
 
         tab1, tab2, tab3 = st.tabs(["🔎 Search by Raga", "🎵 Search by Song", "🧠 Quiz"])
 
-        # --- TAB 1: SEARCH BY RAGA (FIXED: index=None) ---
+        # --- TAB 1: SEARCH BY RAGA (FIXED: Starts Empty) ---
         with tab1:
             st.header("Find Songs by Raga")
             search_term = st.text_input("Type a Raga Name (e.g., 'Kalyani')", placeholder="Type here...")
@@ -98,16 +96,16 @@ if check_password():
                         with st.expander(f"🎼 **{raga_name}** ({len(subset)} songs)", expanded=False):
                             song_titles = subset['The Song'].tolist()
                             
-                            # THE FIX: Added index=None and placeholder
+                            # THE CHANGE IS HERE: index=None makes it start empty
                             selected_song_title = st.selectbox(
                                 f"Select a song in {raga_name}:", 
                                 song_titles, 
-                                index=None, 
+                                index=None,  # <--- Forces empty start
                                 placeholder="Choose a song...",
                                 key=f"sel_{raga_name}"
                             )
                             
-                            # Only show video IF the user has selected a song
+                            # Only run this if a song is ACTUALLY selected
                             if selected_song_title:
                                 selected_row = subset[subset['The Song'] == selected_song_title].iloc[0]
                                 st.divider()
@@ -125,7 +123,7 @@ if check_password():
                 else:
                     st.info("No ragas found. Try another spelling!")
 
-        # --- TAB 2: SEARCH BY SONG (Dynamic Key Fix) ---
+        # --- TAB 2: SEARCH BY SONG ---
         with tab2:
             st.header("Find Raga by Song")
             song_search = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
@@ -162,7 +160,6 @@ if check_password():
                             st.subheader(f"🎵 {selected_row['The Song']}")
                             st.markdown(f"### **Raga: {selected_row['The Ragam']}**")
                             st.write(f"🎬 **Film:** {selected_row['The Film Name']}")
-                        
                 else:
                     st.warning("No songs found. Try a different keyword.")
 
@@ -180,7 +177,6 @@ if check_password():
             if 'quiz_song' in st.session_state:
                 song = st.session_state['quiz_song']
                 correct_raga = song['The Ragam']
-                
                 st.video(song['Video Link'])
                 
                 if 'quiz_options' not in st.session_state:
@@ -201,7 +197,6 @@ if check_password():
                             st.success("🎉 Correct!")
                         else:
                             st.error("Not quite. Try again!")
-
                 with st.expander("👀 Reveal Answer"):
                     st.markdown(f"### Raga: **{correct_raga}**")
                     st.write(f"Song: {song['The Song']}")
