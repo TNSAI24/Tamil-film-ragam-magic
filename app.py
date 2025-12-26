@@ -45,6 +45,7 @@ def add_bg_from_local(image_file):
 # 2. PASSWORD CHECK
 def check_password():
     def password_entered():
+        # .strip() removes spaces from password input
         if st.session_state["password"].strip() == "Raja123":
             st.session_state["password_correct"] = True
             del st.session_state["password"]
@@ -81,10 +82,12 @@ if check_password():
 
         tab1, tab2, tab3 = st.tabs(["🔎 Search by Raga", "🎵 Search by Song", "🧠 Quiz"])
 
-        # --- TAB 1: SEARCH BY RAGA (FIXED: Starts Empty) ---
+        # --- TAB 1: SEARCH BY RAGA ---
         with tab1:
             st.header("Find Songs by Raga")
-            search_term = st.text_input("Type a Raga Name (e.g., 'Kalyani')", placeholder="Type here...")
+            # FIX: Added .strip() here to remove trailing spaces
+            search_input = st.text_input("Type a Raga Name (e.g., 'Kalyani')", placeholder="Type here...")
+            search_term = search_input.strip()
 
             if search_term:
                 results = df[df['The Ragam'].str.contains(search_term, case=False, na=False)]
@@ -96,16 +99,14 @@ if check_password():
                         with st.expander(f"🎼 **{raga_name}** ({len(subset)} songs)", expanded=False):
                             song_titles = subset['The Song'].tolist()
                             
-                            # THE CHANGE IS HERE: index=None makes it start empty
                             selected_song_title = st.selectbox(
                                 f"Select a song in {raga_name}:", 
                                 song_titles, 
-                                index=None,  # <--- Forces empty start
+                                index=None,  
                                 placeholder="Choose a song...",
                                 key=f"sel_{raga_name}"
                             )
                             
-                            # Only run this if a song is ACTUALLY selected
                             if selected_song_title:
                                 selected_row = subset[subset['The Song'] == selected_song_title].iloc[0]
                                 st.divider()
@@ -126,7 +127,9 @@ if check_password():
         # --- TAB 2: SEARCH BY SONG ---
         with tab2:
             st.header("Find Raga by Song")
-            song_search = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
+            # FIX: Added .strip() here as well for safety
+            song_input = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
+            song_search = song_input.strip()
             
             if song_search:
                 song_results = df[df['The Song'].str.contains(song_search, case=False, na=False)]
