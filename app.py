@@ -18,7 +18,6 @@ def add_bg_from_local(image_file):
             background-image: url(data:image/jpg;base64,{encoded_string.decode()});
             background-size: cover;
         }}
-        /* Make text backgrounds semi-transparent so they are readable */
         .stMarkdown, .stHeader {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
@@ -46,7 +45,6 @@ def check_password():
             st.session_state["password_correct"] = False
 
     if "password_correct" not in st.session_state:
-        # First run, show input
         st.text_input(
             "Please enter the Magic Password:", type="password", on_change=password_entered, key="password"
         )
@@ -61,7 +59,6 @@ def check_password():
         return True
 
 if check_password():
-    # Load Background (Ensure 'background.jpg' is in your GitHub repo)
     add_bg_from_local('background.jpg')
 
     # 3. LOAD DATA
@@ -70,6 +67,7 @@ if check_password():
         df = pd.read_csv("songs_updated.csv")
         df['Video Link'] = df['Video Link'].fillna("No Link")
         df['The Ragam'] = df['The Ragam'].astype(str)
+        df['The Song'] = df['The Song'].astype(str)
         return df
 
     try:
@@ -78,10 +76,9 @@ if check_password():
         st.title("🎵 Tamil Film Ragam Magic")
         st.markdown("**Discover the Ragas behind the melodies.**")
 
-        # THREE TABS
         tab1, tab2, tab3 = st.tabs(["🔎 Search by Raga", "🎵 Search by Song", "🧠 Quiz"])
 
-        # --- TAB 1: SEARCH BY RAGA (Grouped) ---
+        # --- TAB 1: SEARCH BY RAGA ---
         with tab1:
             st.header("Find Songs by Raga")
             search_term = st.text_input("Type a Raga Name (e.g., 'Kalyani')", placeholder="Type here...")
@@ -113,29 +110,53 @@ if check_password():
                 else:
                     st.info("No ragas found. Try another spelling!")
 
-        # --- TAB 2: SEARCH BY SONG (Restored!) ---
+        # --- TAB 2: SEARCH BY SONG (NEW DROPDOWN LOGIC!) ---
         with tab2:
             st.header("Find Raga by Song")
             song_search = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
             
             if song_search:
+                # Find matches
                 song_results = df[df['The Song'].str.contains(song_search, case=False, na=False)]
                 
                 if not song_results.empty:
-                    st.success(f"Found {len(song_results)} matches:")
-                    for idx, row in song_results.iterrows():
-                        with st.container():
-                            st.markdown(f"### 🎵 {row['The Song']}")
-                            st.write(f"**Raga:** {row['The Ragam']}")
-                            st.write(f"**Film:** {row['The Film Name']}")
-                            link = str(row['Video Link'])
-                            if "http" in link:
-                                st.video(link)
-                            st.divider()
+                    # Create a unique list of strings like "Song Name (Film Name)" for the dropdown
+                    # This helps distinguish if two songs have the same name
+                    display_options = [f"{row['The Song']} (Movie: {row['The Film Name']})" for index, row in song_results.iterrows()]
+                    
+                    st.success(f"Found {len(song_results)} matches. Select one below:")
+                    
+                    # The Dropdown
+                    selected_option = st.selectbox("Select the specific song:", display_options, key="song_select_dropdown")
+                    
+                    # Extract the selected row based on selection index
+                    # (We find the index in the list, then grab that row from the dataframe)
+                    selection_index = display_options.index(selected_option)
+                    selected_row = song_results.iloc[selection_index]
+                    
+                    st.divider()
+                    
+                    # Display Details (Clean 2-Column Layout)
+                    c1, c2 = st.columns([3, 2])
+                    
+                    with c1:
+                        # Video Player
+                        link = str(selected_row['Video Link'])
+                        if "http" in link:
+                            st.video(link)
+                        else:
+                            st.info("🔸 No Video Available")
+                            
+                    with c2:
+                        # Song Details
+                        st.subheader(f"🎵 {selected_row['The Song']}")
+                        st.markdown(f"### **Raga: {selected_row['The Ragam']}**")
+                        st.write(f"🎬 **Film:** {selected_row['The Film Name']}")
+                        
                 else:
                     st.warning("No songs found. Try a different keyword.")
 
-        # --- TAB 3: QUIZ (With Hints) ---
+        # --- TAB 3: QUIZ ---
         with tab3:
             st.header("Test Your Ear!")
             if st.button("🎲 Play New Mystery Song"):
@@ -152,7 +173,6 @@ if check_password():
                 
                 st.video(song['Video Link'])
                 
-                # Logic for Hints
                 if 'quiz_options' not in st.session_state:
                     all_ragas = df['The Ragam'].unique().tolist()
                     possible_wrongs = [r for r in all_ragas if r != correct_raga and r != 'nan']
