@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 4.1 (The "Readable List" Fix) ---
+# --- STYLE FUNCTION: VERSION 4.2 (Closed Box Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -19,14 +19,47 @@ def add_bg_from_local(image_file):
             background-size: cover;
         }}
         
-        /* --- GENERAL HEADERS (Keep them Blue) --- */
+        /* GENERAL HEADERS (Blue) */
         h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
             color: #00008B !important; 
         }}
 
-        /* --- THE FIX: INPUTS vs DROPDOWNS --- */
+        /* --- THE FIX: UNIFIED DARK DROPDOWN --- */
         
-        /* 1. The Typing Box (Keep this White & Blue) */
+        /* 1. The Closed Box (The glitch you saw) */
+        /* We force this to be Black Background + WHITE Text */
+        div[data-baseweb="select"] > div {{
+            background-color: #000000 !important; /* Black */
+            color: #ffffff !important; /* White */
+        }}
+        div[data-baseweb="select"] span {{
+            color: #ffffff !important; /* White Text */
+        }}
+        /* The arrow icon */
+        div[data-baseweb="select"] svg {{
+            fill: #ffffff !important;
+        }}
+
+        /* 2. The Open List (Already fixed) */
+        div[data-baseweb="popover"] {{
+            background-color: #000000 !important;
+        }}
+        ul[data-baseweb="menu"] {{
+            background-color: #000000 !important;
+        }}
+        li[role="option"] {{
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }}
+        li[role="option"] div, li[role="option"] span {{
+            color: #ffffff !important;
+        }}
+        li[role="option"][aria-selected="true"] {{
+            background-color: #333333 !important;
+            color: #ffffff !important;
+        }}
+
+        /* 3. The Typing Input (Keep White/Blue) */
         input {{
             background-color: #ffffff !important;
             color: #00008B !important;
@@ -35,51 +68,18 @@ def add_bg_from_local(image_file):
             background-color: #ffffff !important;
             color: #00008B !important;
         }}
-        
-        /* 2. THE DROPDOWN LIST (The Pop-up Menu) */
-        /* We FORCE this to be Black Background + White Text */
-        /* This ensures readability even if the phone forces Dark Mode */
-        
-        div[data-baseweb="popover"] {{
-            background-color: #000000 !important; /* Black */
-        }}
-        ul[data-baseweb="menu"] {{
-            background-color: #000000 !important; /* Black */
-        }}
-        
-        /* Options inside the list */
-        li[role="option"] {{
-            background-color: #000000 !important; /* Black */
-            color: #ffffff !important; /* WHITE TEXT */
-        }}
-        
-        /* Force text INSIDE the options to be WHITE */
-        li[role="option"] div, li[role="option"] span {{
-            color: #ffffff !important; 
-        }}
-        
-        /* Highlight Color (When you press an option) */
-        li[role="option"][aria-selected="true"] {{
-            background-color: #333333 !important; /* Dark Grey */
-            color: #ffffff !important;
-        }}
 
-        /* --- REST OF THE DESIGN --- */
-        /* White Box Containers */
+        /* REST OF DESIGN */
         .stMarkdown, .stHeader, .stCaption, .stText, .stTextInput {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
         }}
-        
-        /* Tab Headers */
         button[data-baseweb="tab"] {{
             color: #00008B !important;
             font-weight: bold !important;
             background-color: rgba(255, 255, 255, 0.8) !important;
         }}
-        
-        /* Quiz Radio Buttons */
         div[role="radiogroup"] {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
@@ -88,8 +88,6 @@ def add_bg_from_local(image_file):
         div[role="radiogroup"] p {{
             color: #00008B !important;
         }}
-        
-        /* Expanders */
         .streamlit-expanderHeader {{
             background-color: rgba(255, 255, 255, 0.9) !important;
             color: #00008B !important;
@@ -100,8 +98,6 @@ def add_bg_from_local(image_file):
             border-radius: 10px;
             color: #00008B !important;
         }}
-        
-        /* Alerts */
         .stAlert {{
             color: #00008B !important;
             background-color: rgba(255, 255, 255, 0.9) !important;
@@ -171,7 +167,6 @@ if check_password():
                         with st.expander(label_text, expanded=False):
                             song_titles = subset['The Song'].tolist()
                             
-                            # Dropdown setup
                             selected_song_title = st.selectbox(
                                 f"Select a song in {raga_name}:", 
                                 song_titles, 
