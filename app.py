@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 3.8 (Mobile Contrast Fix) ---
+# --- STYLE FUNCTION: VERSION 4.0 (The Safety Grey Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -18,76 +18,86 @@ def add_bg_from_local(image_file):
             background-image: url(data:image/jpg;base64,{encoded_string.decode()});
             background-size: cover;
         }}
-        /* UNIVERSAL BLUE TEXT */
+        
+        /* --- GENERAL HEADERS (Keep them Blue) --- */
         h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
             color: #00008B !important; 
         }}
-        
-        /* --- MOBILE DROPDOWN FIX (The "No Dark Mode" Rule) --- */
-        /* This tells the phone: "This box MUST be Light Mode" */
-        div[data-baseweb="popover"] {{
-            color-scheme: light; 
-            background-color: #ffffff !important;
-        }}
-        
-        /* Force the menu list to be white */
-        ul[data-baseweb="menu"] {{
-            background-color: #ffffff !important;
-        }}
-        
-        /* Force options to be White Background + Blue Text */
-        li[role="option"] {{
-            background-color: #ffffff !important;
-            color: #00008B !important;
-        }}
-        
-        /* Force text INSIDE options to be Blue (overrides mobile defaults) */
-        li[role="option"] div, li[role="option"] span {{
-            color: #00008B !important;
-        }}
-        
-        /* Highlight color (Light Blue background) */
-        li[role="option"][aria-selected="true"] {{
-            background-color: #E6F3FF !important; 
-            color: #00008B !important;
-        }}
 
-        /* --- INPUT FIELDS --- */
+        /* --- THE SAFETY FIX: INPUTS & DROPDOWNS --- */
+        /* We force these to be GREY BACKGROUND with BLACK TEXT */
+        
+        /* 1. The box where you type */
         input {{
-            color: #00008B !important;
-            background-color: #ffffff !important;
+            background-color: #E0E0E0 !important; /* Light Grey */
+            color: #000000 !important; /* Black */
         }}
+        
+        /* 2. The container for the input */
         .stTextInput > div > div {{
-            background-color: #ffffff !important;
-            color: #00008B !important;
+            background-color: #E0E0E0 !important;
+            color: #000000 !important;
         }}
+        
+        /* 3. The Dropdown Box (Before clicking) */
         div[data-baseweb="select"] > div {{
-            background-color: #ffffff !important;
-            color: #00008B !important;
+            background-color: #E0E0E0 !important;
+            color: #000000 !important;
         }}
+        
+        /* 4. The Text inside the Dropdown */
         div[data-baseweb="select"] span {{
-            color: #00008B !important;
+            color: #000000 !important; /* Force Black */
+        }}
+        
+        /* 5. The POPUP MENU (The list that opens) */
+        div[data-baseweb="popover"] {{
+            background-color: #E0E0E0 !important;
+        }}
+        ul[data-baseweb="menu"] {{
+            background-color: #E0E0E0 !important;
+        }}
+        
+        /* 6. The Options inside the list */
+        li[role="option"] {{
+            background-color: #E0E0E0 !important;
+            color: #000000 !important; /* Black text */
+        }}
+        
+        /* 7. Text inside the options */
+        li[role="option"] div, li[role="option"] span {{
+            color: #000000 !important;
+        }}
+        
+        /* 8. Selected/Hovered Option */
+        li[role="option"][aria-selected="true"] {{
+            background-color: #D3D3D3 !important; /* Slightly darker grey */
+            color: #000000 !important;
         }}
 
-        /* WHITE BOX CONTAINERS */
+        /* --- REST OF THE DESIGN --- */
+        /* White Box Containers */
         .stMarkdown, .stHeader, .stCaption, .stText, .stTextInput {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
         }}
-        /* TAB HEADERS */
+        
+        /* Tab Headers */
         button[data-baseweb="tab"] {{
             color: #00008B !important;
             font-weight: bold !important;
             background-color: rgba(255, 255, 255, 0.8) !important;
         }}
-        /* QUIZ RADIO BUTTONS */
+        
+        /* Quiz Radio Buttons */
         div[role="radiogroup"] {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 10px;
         }}
-        /* EXPANDERS */
+        
+        /* Expanders */
         .streamlit-expanderHeader {{
             background-color: rgba(255, 255, 255, 0.9) !important;
             color: #00008B !important;
@@ -98,7 +108,8 @@ def add_bg_from_local(image_file):
             border-radius: 10px;
             color: #00008B !important;
         }}
-        /* ALERTS */
+        
+        /* Alerts */
         .stAlert {{
             color: #00008B !important;
             background-color: rgba(255, 255, 255, 0.9) !important;
