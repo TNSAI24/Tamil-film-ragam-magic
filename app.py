@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 3.6 (Dropdown Visibility Fix) ---
+# --- STYLE FUNCTION: VERSION 3.7 (Dropdown Contrast Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -23,7 +23,32 @@ def add_bg_from_local(image_file):
         h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
             color: #00008B !important; 
         }}
-        /* INPUT FIELDS (The box where you type) */
+        
+        /* --- DROPDOWN MENU FIX (THE NUCLEAR OPTION) --- */
+        /* Target the Popover container */
+        div[data-baseweb="popover"] {{
+            background-color: #ffffff !important;
+        }}
+        /* Target the Menu list itself */
+        ul[data-baseweb="menu"] {{
+            background-color: #ffffff !important;
+        }}
+        /* Target the individual options */
+        li[role="option"] {{
+            background-color: #ffffff !important;
+            color: #00008B !important;
+        }}
+        /* Target the text inside the options */
+        li[role="option"] div {{
+            color: #00008B !important;
+        }}
+        /* Target the selected/hovered option */
+        li[role="option"][aria-selected="true"] {{
+            background-color: #F0F8FF !important; /* Alice Blue */
+            color: #00008B !important;
+        }}
+
+        /* --- INPUT FIELDS --- */
         input {{
             color: #00008B !important;
             background-color: #ffffff !important;
@@ -32,24 +57,6 @@ def add_bg_from_local(image_file):
             background-color: #ffffff !important;
             color: #00008B !important;
         }}
-        
-        /* DROPDOWN MENU FIX (The list that pops up) */
-        /* Force the dropdown container to be WHITE */
-        ul[data-baseweb="menu"] {{
-            background-color: #ffffff !important;
-        }}
-        /* Force the individual options to be WHITE with BLUE text */
-        li[role="option"] {{
-            background-color: #ffffff !important;
-            color: #00008B !important;
-        }}
-        /* Highlight color when you hover/select */
-        li[role="option"][aria-selected="true"] {{
-            background-color: #e6e6fa !important; /* Light Lavender */
-            color: #00008B !important;
-        }}
-        
-        /* CLOSED DROPDOWN BOX */
         div[data-baseweb="select"] > div {{
             background-color: #ffffff !important;
             color: #00008B !important;
@@ -57,7 +64,7 @@ def add_bg_from_local(image_file):
         div[data-baseweb="select"] span {{
             color: #00008B !important;
         }}
-        
+
         /* WHITE BOX CONTAINERS */
         .stMarkdown, .stHeader, .stCaption, .stText, .stTextInput {{
             background-color: rgba(255, 255, 255, 0.9);
