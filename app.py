@@ -6,13 +6,12 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 3.7 (Dropdown Contrast Fix) ---
+# --- STYLE FUNCTION: VERSION 3.8 (Mobile Contrast Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
         
-        # We split the CSS into smaller chunks to avoid copy-paste errors
         css_code = f"""
         <style>
         .stApp {{
@@ -24,27 +23,32 @@ def add_bg_from_local(image_file):
             color: #00008B !important; 
         }}
         
-        /* --- DROPDOWN MENU FIX (THE NUCLEAR OPTION) --- */
-        /* Target the Popover container */
+        /* --- MOBILE DROPDOWN FIX (The "No Dark Mode" Rule) --- */
+        /* This tells the phone: "This box MUST be Light Mode" */
         div[data-baseweb="popover"] {{
+            color-scheme: light; 
             background-color: #ffffff !important;
         }}
-        /* Target the Menu list itself */
+        
+        /* Force the menu list to be white */
         ul[data-baseweb="menu"] {{
             background-color: #ffffff !important;
         }}
-        /* Target the individual options */
+        
+        /* Force options to be White Background + Blue Text */
         li[role="option"] {{
             background-color: #ffffff !important;
             color: #00008B !important;
         }}
-        /* Target the text inside the options */
-        li[role="option"] div {{
+        
+        /* Force text INSIDE options to be Blue (overrides mobile defaults) */
+        li[role="option"] div, li[role="option"] span {{
             color: #00008B !important;
         }}
-        /* Target the selected/hovered option */
+        
+        /* Highlight color (Light Blue background) */
         li[role="option"][aria-selected="true"] {{
-            background-color: #F0F8FF !important; /* Alice Blue */
+            background-color: #E6F3FF !important; 
             color: #00008B !important;
         }}
 
@@ -158,7 +162,7 @@ if check_password():
                     unique_ragas = results['The Ragam'].unique()
                     for raga_name in unique_ragas:
                         subset = results[results['The Ragam'] == raga_name]
-                        # SAFETY FIX: Create label first to avoid long line error
+                        # PART 2 CONTINUES HERE
                         label_text = f"🎼 **{raga_name}** ({len(subset)} songs)"
                         
                         with st.expander(label_text, expanded=False):
