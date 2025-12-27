@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 4.3 (Platinum Grey Fix) ---
+# --- STYLE FUNCTION: VERSION 4.4 (Golden Cream Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -19,66 +19,62 @@ def add_bg_from_local(image_file):
             background-size: cover;
         }}
         
-        /* UNIVERSAL BLUE TEXT (Headers, Labels, etc.) */
+        /* HEADERS (Keep Blue) */
         h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
             color: #00008B !important; 
         }}
 
-        /* --- THE PLATINUM GREY FIX --- */
-        /* We use a soft grey background with solid BLACK text for all inputs */
+        /* --- THE GOLDEN CREAM FIX --- */
+        /* We use Light Yellow (#FFFACD) to prevent Dark Mode inversion */
         
-        /* 1. The Box where you type (Input) */
+        /* 1. INPUT BOXES (Typing areas) */
         input {{
-            background-color: #E8E8E8 !important; /* Platinum Grey */
-            color: #000000 !important; /* Solid Black */
+            background-color: #FFFACD !important; /* Lemon Chiffon */
+            color: #000000 !important; /* Black */
             font-weight: 500;
         }}
         .stTextInput > div > div {{
-            background-color: #E8E8E8 !important;
+            background-color: #FFFACD !important;
             color: #000000 !important;
         }}
-        
-        /* 2. The Dropdown Box (Closed State) */
+
+        /* 2. THE STUBBORN DROPDOWN BOX */
         div[data-baseweb="select"] > div {{
-            background-color: #E8E8E8 !important; /* Platinum Grey */
-            color: #000000 !important; /* Solid Black */
-            border: 1px solid #d0d0d0; /* Subtle border for definition */
+            background-color: #FFFACD !important; /* Lemon Chiffon */
+            color: #000000 !important; /* Black */
+            border: 1px solid #c0c0c0;
         }}
         
-        /* 3. Force ALL text inside the dropdown to be BLACK */
+        /* 3. Text inside the dropdown */
         div[data-baseweb="select"] span {{
             color: #000000 !important;
         }}
-        div[data-baseweb="select"] div {{
-            color: #000000 !important;
-        }}
-        /* The Down Arrow Icon */
+        /* The Down Arrow */
         div[data-baseweb="select"] svg {{
             fill: #000000 !important;
         }}
-
-        /* 4. The Dropdown List (Open State) */
+        
+        /* 4. THE POPUP LIST */
         div[data-baseweb="popover"] {{
-            background-color: #E8E8E8 !important;
+            background-color: #FFFACD !important;
         }}
         ul[data-baseweb="menu"] {{
-            background-color: #E8E8E8 !important;
+            background-color: #FFFACD !important;
         }}
         li[role="option"] {{
-            background-color: #E8E8E8 !important;
+            background-color: #FFFACD !important;
             color: #000000 !important;
         }}
-        /* Text inside options */
         li[role="option"] div, li[role="option"] span {{
             color: #000000 !important;
         }}
-        /* Hover/Selected State */
+        /* Hover Effect */
         li[role="option"][aria-selected="true"] {{
-            background-color: #D3D3D3 !important; /* Darker Grey */
+            background-color: #F0E68C !important; /* Khaki */
             color: #000000 !important;
         }}
 
-        /* --- REST OF THE DESIGN --- */
+        /* REST OF DESIGN */
         .stMarkdown, .stHeader, .stCaption, .stText, .stTextInput {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
@@ -93,9 +89,6 @@ def add_bg_from_local(image_file):
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 10px;
-        }}
-        div[role="radiogroup"] p {{
-            color: #00008B !important;
         }}
         .streamlit-expanderHeader {{
             background-color: rgba(255, 255, 255, 0.9) !important;
