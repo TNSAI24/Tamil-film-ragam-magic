@@ -6,26 +6,24 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 3.5 (Split Part 1) ---
+# --- STYLE FUNCTION ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
         
-        # CSS STYLING
+        # We split the CSS into smaller chunks to avoid copy-paste errors
         css_code = f"""
         <style>
         .stApp {{
             background-image: url(data:image/jpg;base64,{encoded_string.decode()});
             background-size: cover;
         }}
-        
-        /* --- UNIVERSAL BLUE TEXT --- */
+        /* UNIVERSAL BLUE TEXT */
         h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
-            color: #00008B !important; /* Dark Blue */
+            color: #00008B !important; 
         }}
-
-        /* --- INPUT FIELDS & DROPDOWNS --- */
+        /* INPUT FIELDS & DROPDOWNS */
         input {{
             color: #00008B !important;
             background-color: #ffffff !important;
@@ -41,29 +39,25 @@ def add_bg_from_local(image_file):
         div[data-baseweb="select"] span {{
             color: #00008B !important;
         }}
-
-        /* --- WHITE BOX CONTAINERS --- */
+        /* WHITE BOX CONTAINERS */
         .stMarkdown, .stHeader, .stCaption, .stText, .stTextInput {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
         }}
-        
-        /* --- TAB HEADERS --- */
+        /* TAB HEADERS */
         button[data-baseweb="tab"] {{
             color: #00008B !important;
             font-weight: bold !important;
             background-color: rgba(255, 255, 255, 0.8) !important;
         }}
-        
-        /* --- QUIZ RADIO BUTTONS --- */
+        /* QUIZ RADIO BUTTONS */
         div[role="radiogroup"] {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 10px;
         }}
-        
-        /* --- EXPANDERS --- */
+        /* EXPANDERS */
         .streamlit-expanderHeader {{
             background-color: rgba(255, 255, 255, 0.9) !important;
             color: #00008B !important;
@@ -74,8 +68,7 @@ def add_bg_from_local(image_file):
             border-radius: 10px;
             color: #00008B !important;
         }}
-        
-        /* --- ALERTS --- */
+        /* ALERTS */
         .stAlert {{
             color: #00008B !important;
             background-color: rgba(255, 255, 255, 0.9) !important;
@@ -139,9 +132,13 @@ if check_password():
                     unique_ragas = results['The Ragam'].unique()
                     for raga_name in unique_ragas:
                         subset = results[results['The Ragam'] == raga_name]
-                        # THIS IS WHERE IT WAS CUTTING OFF
-                        with st.expander(f"🎼 **{raga_name}** ({len(subset)} songs)", expanded=False):
+                        # SAFETY FIX: Create label first to avoid long line error
+                        label_text = f"🎼 **{raga_name}** ({len(subset)} songs)"
+                        
+                        with st.expander(label_text, expanded=False):
                             song_titles = subset['The Song'].tolist()
+                            
+                            # Dropdown setup
                             selected_song_title = st.selectbox(
                                 f"Select a song in {raga_name}:", 
                                 song_titles, 
@@ -149,6 +146,7 @@ if check_password():
                                 placeholder="Choose a song...",
                                 key=f"sel_{raga_name}"
                             )
+                            
                             if selected_song_title:
                                 selected_row = subset[subset['The Song'] == selected_song_title].iloc[0]
                                 st.divider()
