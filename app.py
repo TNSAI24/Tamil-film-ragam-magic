@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 2.9 (High Contrast Fix) ---
+# --- STYLE FUNCTION: VERSION 2.95 (Nuclear Radio Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -20,7 +20,6 @@ def add_bg_from_local(image_file):
         }}
         
         /* --- GENERAL TEXT VISIBILITY --- */
-        /* Forces text to be BLACK inside white boxes */
         .stMarkdown, .stHeader, .stCaption, .stText {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
@@ -40,18 +39,21 @@ def add_bg_from_local(image_file):
             color: black !important;
         }}
         
-        /* --- QUIZ SPECIFIC FIXES (AGGRESSIVE) --- */
-        /* Force Radio Button Options to be Black */
-        .stRadio div [data-testid="stMarkdownContainer"] p {{
-            color: black !important;
-            font-weight: 500;
-        }}
-        
-        /* Background for the Radio Group to ensure contrast */
+        /* --- THE NUCLEAR FIX FOR QUIZ --- */
+        /* Target the Radio Group Container */
         div[role="radiogroup"] {{
             background-color: rgba(255, 255, 255, 0.9);
-            padding: 10px;
+            padding: 15px;
             border-radius: 10px;
+        }}
+        
+        /* Force EVERY text element inside the radio group to be black */
+        div[role="radiogroup"] p, 
+        div[role="radiogroup"] div, 
+        div[role="radiogroup"] span, 
+        div[role="radiogroup"] label {{
+            color: black !important;
+            font-weight: 600; /* Make it slightly bold for better readability */
         }}
 
         /* Info/Success/Error Boxes */
@@ -69,7 +71,6 @@ def add_bg_from_local(image_file):
 # 2. PASSWORD CHECK
 def check_password():
     def password_entered():
-        # .strip() removes spaces from password input
         if st.session_state["password"].strip() == "Raja123":
             st.session_state["password_correct"] = True
             del st.session_state["password"]
@@ -121,7 +122,6 @@ if check_password():
                         subset = results[results['The Ragam'] == raga_name]
                         with st.expander(f"🎼 **{raga_name}** ({len(subset)} songs)", expanded=False):
                             song_titles = subset['The Song'].tolist()
-                            
                             selected_song_title = st.selectbox(
                                 f"Select a song in {raga_name}:", 
                                 song_titles, 
@@ -129,7 +129,6 @@ if check_password():
                                 placeholder="Choose a song...",
                                 key=f"sel_{raga_name}"
                             )
-                            
                             if selected_song_title:
                                 selected_row = subset[subset['The Song'] == selected_song_title].iloc[0]
                                 st.divider()
@@ -158,9 +157,7 @@ if check_password():
                 
                 if not song_results.empty:
                     display_options = [f"{row['The Song']} (Movie: {row['The Film Name']})" for index, row in song_results.iterrows()]
-                    
                     st.success(f"Found {len(song_results)} matches.")
-                    
                     selected_option = st.selectbox(
                         "👇 Select a song from the list to see details:", 
                         display_options, 
@@ -168,11 +165,9 @@ if check_password():
                         placeholder="Choose a song...",
                         key=f"select_{song_search}"
                     )
-                    
                     if selected_option:
                         selection_index = display_options.index(selected_option)
                         selected_row = song_results.iloc[selection_index]
-                        
                         st.divider()
                         c1, c2 = st.columns([3, 2])
                         with c1:
