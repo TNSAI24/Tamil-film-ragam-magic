@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 3.1 (Universal Blue) ---
+# --- STYLE FUNCTION: VERSION 3.2 (White Backgrounds for Inputs) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -20,27 +20,36 @@ def add_bg_from_local(image_file):
         }}
         
         /* --- UNIVERSAL BLUE TEXT --- */
-        /* This targets headings, paragraphs, labels, spans, divs, and list items */
         h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
             color: #00008B !important; /* Dark Blue */
         }}
 
-        /* --- INPUT FIELDS (The text you type) --- */
+        /* --- INPUT FIELDS & DROPDOWNS (THE FIX) --- */
+        /* Force the box where you type to be WHITE background with BLUE text */
         input {{
             color: #00008B !important;
-            -webkit-text-fill-color: #00008B !important; /* Safari/Chrome fix */
-            caret-color: #00008B !important; /* The blinking cursor */
+            background-color: #ffffff !important; /* Force White Background */
         }}
         
-        /* --- DROPDOWNS & SELECTBOXES --- */
-        /* Forces the text inside the selection box to be blue */
-        div[data-baseweb="select"] div {{
+        /* Specific fix for Streamlit Text Input Containers */
+        .stTextInput > div > div {{
+            background-color: #ffffff !important;
+            color: #00008B !important;
+        }}
+
+        /* Specific fix for Dropdown/Selectbox Containers */
+        div[data-baseweb="select"] > div {{
+            background-color: #ffffff !important;
+            color: #00008B !important;
+        }}
+        
+        /* Ensure the text inside the dropdown is visible */
+        div[data-baseweb="select"] span {{
             color: #00008B !important;
         }}
 
         /* --- BACKGROUND BOXES --- */
-        /* White background, Blue Text */
-        .stMarkdown, .stHeader, .stCaption, .stText, .stTextInput {{
+        .stMarkdown, .stHeader, .stCaption, .stText {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
@@ -50,7 +59,7 @@ def add_bg_from_local(image_file):
         button[data-baseweb="tab"] {{
             color: #00008B !important;
             font-weight: bold !important;
-            background-color: rgba(255, 255, 255, 0.6) !important;
+            background-color: rgba(255, 255, 255, 0.8) !important;
         }}
         
         /* --- QUIZ & RADIO BUTTONS --- */
@@ -72,9 +81,10 @@ def add_bg_from_local(image_file):
             color: #00008B !important;
         }}
         
-        /* --- ALERTS (Info/Success/Error) --- */
+        /* --- ALERTS --- */
         .stAlert {{
             color: #00008B !important;
+            background-color: rgba(255, 255, 255, 0.9) !important;
         }}
         
         </style>
@@ -136,106 +146,4 @@ if check_password():
                     unique_ragas = results['The Ragam'].unique()
                     for raga_name in unique_ragas:
                         subset = results[results['The Ragam'] == raga_name]
-                        with st.expander(f"🎼 **{raga_name}** ({len(subset)} songs)", expanded=False):
-                            song_titles = subset['The Song'].tolist()
-                            selected_song_title = st.selectbox(
-                                f"Select a song in {raga_name}:", 
-                                song_titles, 
-                                index=None,  
-                                placeholder="Choose a song...",
-                                key=f"sel_{raga_name}"
-                            )
-                            if selected_song_title:
-                                selected_row = subset[subset['The Song'] == selected_song_title].iloc[0]
-                                st.divider()
-                                c1, c2 = st.columns([3, 2])
-                                with c1:
-                                    link = str(selected_row['Video Link'])
-                                    if "http" in link:
-                                        st.video(link)
-                                    else:
-                                        st.info("🔸 No Video Available")
-                                with c2:
-                                    st.subheader(selected_row['The Song'])
-                                    st.write(f"🎬 **Film:** {selected_row['The Film Name']}")
-                                    st.caption(f"🎶 Raga: {selected_row['The Ragam']}")
-                else:
-                    st.info("No ragas found. Try another spelling!")
-
-        # --- TAB 2: SEARCH BY SONG ---
-        with tab2:
-            st.header("Find Raga by Song")
-            song_input = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
-            song_search = song_input.strip()
-            
-            if song_search:
-                song_results = df[df['The Song'].str.contains(song_search, case=False, na=False)]
-                
-                if not song_results.empty:
-                    display_options = [f"{row['The Song']} (Movie: {row['The Film Name']})" for index, row in song_results.iterrows()]
-                    st.success(f"Found {len(song_results)} matches.")
-                    selected_option = st.selectbox(
-                        "👇 Select a song from the list to see details:", 
-                        display_options, 
-                        index=None,  
-                        placeholder="Choose a song...",
-                        key=f"select_{song_search}"
-                    )
-                    if selected_option:
-                        selection_index = display_options.index(selected_option)
-                        selected_row = song_results.iloc[selection_index]
-                        st.divider()
-                        c1, c2 = st.columns([3, 2])
-                        with c1:
-                            link = str(selected_row['Video Link'])
-                            if "http" in link:
-                                st.video(link)
-                            else:
-                                st.info("🔸 No Video Available")
-                        with c2:
-                            st.subheader(f"🎵 {selected_row['The Song']}")
-                            st.markdown(f"### **Raga: {selected_row['The Ragam']}**")
-                            st.write(f"🎬 **Film:** {selected_row['The Film Name']}")
-                else:
-                    st.warning("No songs found. Try a different keyword.")
-
-        # --- TAB 3: QUIZ ---
-        with tab3:
-            st.header("Test Your Ear!")
-            if st.button("🎲 Play New Mystery Song"):
-                valid_songs = df[df['Video Link'].str.contains("http", na=False)]
-                if not valid_songs.empty:
-                    mystery = valid_songs.sample(1).iloc[0]
-                    st.session_state['quiz_song'] = mystery
-                    if 'quiz_options' in st.session_state:
-                        del st.session_state['quiz_options']
-            
-            if 'quiz_song' in st.session_state:
-                song = st.session_state['quiz_song']
-                correct_raga = song['The Ragam']
-                st.video(song['Video Link'])
-                
-                if 'quiz_options' not in st.session_state:
-                    all_ragas = df['The Ragam'].unique().tolist()
-                    possible_wrongs = [r for r in all_ragas if r != correct_raga and r != 'nan']
-                    num_to_pick = min(len(possible_wrongs), 2)
-                    wrong_options = random.sample(possible_wrongs, num_to_pick)
-                    option_list = wrong_options + [correct_raga]
-                    random.shuffle(option_list)
-                    st.session_state['quiz_options'] = option_list
-
-                st.info("👇 Keep scrolling for hints!")
-                with st.expander("💡 Need a Hint?"):
-                    user_guess = st.radio("Pick one:", st.session_state['quiz_options'], index=None, key="quiz_radio")
-                    if user_guess:
-                        if user_guess == correct_raga:
-                            st.balloons()
-                            st.success("🎉 Correct!")
-                        else:
-                            st.error("Not quite. Try again!")
-                with st.expander("👀 Reveal Answer"):
-                    st.markdown(f"### Raga: **{correct_raga}**")
-                    st.write(f"Song: {song['The Song']}")
-
-    except Exception as e:
-        st.error(f"⚠️ Error: {e}")
+                        with st.expander(f"🎼 **{raga_name}** ({len(
