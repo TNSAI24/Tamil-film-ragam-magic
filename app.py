@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 2.95 (Nuclear Radio Fix) ---
+# --- STYLE FUNCTION: VERSION 3.0 (Blue Theme) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -19,46 +19,56 @@ def add_bg_from_local(image_file):
             background-size: cover;
         }}
         
-        /* --- GENERAL TEXT VISIBILITY --- */
+        /* --- GLOBAL TEXT COLOR: DARK BLUE --- */
+        /* Targets Titles, Headers, Paragraphs, Captions */
+        .stMarkdown, .stHeader, .stCaption, .stText, h1, h2, h3, p, label, span {{
+            color: #00008B !important; /* Dark Blue */
+        }}
+        
+        /* --- BACKGROUND BOXES --- */
+        /* Keeps the white background for readability, but text is now Blue */
         .stMarkdown, .stHeader, .stCaption, .stText {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
-            color: black !important;
         }}
         
-        /* --- DROPDOWN & EXPANDER FIXES --- */
-        .streamlit-expanderHeader {{
-            background-color: rgba(255, 255, 255, 0.9) !important;
-            color: black !important;
-            border-radius: 10px;
-        }}
-        .stExpander {{
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            color: black !important;
+        /* --- TAB HEADERS (The Specific Request) --- */
+        button[data-baseweb="tab"] {{
+            color: #00008B !important; /* Dark Blue */
+            font-weight: bold !important;
+            background-color: rgba(255, 255, 255, 0.6) !important; /* Slight white backing */
         }}
         
-        /* --- THE NUCLEAR FIX FOR QUIZ --- */
-        /* Target the Radio Group Container */
+        /* --- QUIZ & RADIO BUTTONS --- */
         div[role="radiogroup"] {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 10px;
         }}
-        
-        /* Force EVERY text element inside the radio group to be black */
         div[role="radiogroup"] p, 
         div[role="radiogroup"] div, 
         div[role="radiogroup"] span, 
         div[role="radiogroup"] label {{
-            color: black !important;
-            font-weight: 600; /* Make it slightly bold for better readability */
+            color: #00008B !important; /* Dark Blue */
+            font-weight: 600;
         }}
 
-        /* Info/Success/Error Boxes */
+        /* --- DROPDOWNS & EXPANDERS --- */
+        .streamlit-expanderHeader {{
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            color: #00008B !important; /* Dark Blue */
+            border-radius: 10px;
+        }}
+        .stExpander {{
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            color: #00008B !important; /* Dark Blue */
+        }}
+        
+        /* Info/Success/Error Boxes - Keep text dark */
         .stAlert {{
-            color: black !important;
+            color: #00008B !important;
         }}
         
         </style>
