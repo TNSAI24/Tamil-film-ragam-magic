@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 5.0 (High Contrast Dark Mode) ---
+# --- STYLE FUNCTION: VERSION 6.0 (Force Light Mode) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -19,60 +19,64 @@ def add_bg_from_local(image_file):
             background-size: cover;
         }}
         
-        /* GENERAL HEADERS (Keep Blue) */
+        /* --- THE ULTIMATE OVERRIDE --- */
+        /* This tells the browser: "Do NOT use Dark Mode here." */
+        :root {{
+            color-scheme: light;
+        }}
+        
+        /* Force text to be Dark Blue everywhere */
         h1, h2, h3, h4, h5, h6, p, label, a {{
             color: #00008B !important; 
         }}
 
-        /* --- THE FIX: EMBRACE THE DARKNESS --- */
-        /* We force all input boxes to be BLACK BACKGROUND with BRIGHT WHITE TEXT */
-        /* This works perfectly with mobile Dark Mode */
-
-        /* 1. INPUT BOXES (Typing areas) */
+        /* --- DROPDOWNS & INPUTS --- */
+        /* Now that we forced Light Mode, we can use standard White/Blue */
+        
+        /* 1. INPUT BOXES */
         input {{
-            background-color: #000000 !important; /* Black */
-            color: #ffffff !important; /* White */
+            background-color: #ffffff !important;
+            color: #00008B !important;
         }}
         .stTextInput > div > div {{
-            background-color: #000000 !important;
-            color: #ffffff !important;
+            background-color: #ffffff !important;
+            color: #00008B !important;
         }}
 
-        /* 2. THE DROPDOWN BOX (Closed) */
+        /* 2. DROPDOWN BOX (Closed) */
         div[data-baseweb="select"] > div {{
-            background-color: #000000 !important; /* Black */
-            color: #ffffff !important; /* White */
-            border: 1px solid #ffffff; /* White border to see it clearly */
+            background-color: #ffffff !important;
+            color: #00008B !important;
+            border: 1px solid #00008B; /* Blue border to make it pop */
         }}
         
-        /* 3. FORCE TEXT INSIDE DROPDOWN TO BE WHITE */
+        /* 3. Text inside Dropdown */
         div[data-baseweb="select"] span {{
-            color: #ffffff !important;
+            color: #00008B !important;
         }}
-        /* The Down Arrow */
+        /* Down Arrow */
         div[data-baseweb="select"] svg {{
-            fill: #ffffff !important;
+            fill: #00008B !important;
         }}
         
-        /* 4. THE POPUP LIST (Open) */
+        /* 4. DROPDOWN LIST (Open) */
         div[data-baseweb="popover"] {{
-            background-color: #000000 !important;
+            background-color: #ffffff !important;
         }}
         ul[data-baseweb="menu"] {{
-            background-color: #000000 !important;
+            background-color: #ffffff !important;
         }}
         li[role="option"] {{
-            background-color: #000000 !important;
-            color: #ffffff !important;
+            background-color: #ffffff !important;
+            color: #00008B !important;
         }}
-        /* Force text inside options to be White */
         li[role="option"] div, li[role="option"] span {{
-            color: #ffffff !important;
+            color: #00008B !important;
         }}
-        /* Hover Effect */
+        /* Highlight Effect */
         li[role="option"][aria-selected="true"] {{
-            background-color: #333333 !important; /* Dark Grey */
-            color: #ffffff !important;
+            background-color: #E6F3FF !important; /* Light Blue */
+            color: #00008B !important;
         }}
 
         /* REST OF DESIGN */
@@ -81,7 +85,6 @@ def add_bg_from_local(image_file):
             padding: 10px;
             border-radius: 10px;
         }}
-        /* Ensure tab text is visible */
         button[data-baseweb="tab"] {{
             color: #00008B !important;
             font-weight: bold !important;
@@ -92,7 +95,6 @@ def add_bg_from_local(image_file):
             padding: 15px;
             border-radius: 10px;
         }}
-        /* Force radio button text to be blue */
         div[role="radiogroup"] p {{
             color: #00008B !important;
         }}
