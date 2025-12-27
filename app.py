@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION ---
+# --- STYLE FUNCTION: VERSION 2.8 (Includes Quiz Fixes) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -18,13 +18,17 @@ def add_bg_from_local(image_file):
             background-image: url(data:image/jpg;base64,{encoded_string.decode()});
             background-size: cover;
         }}
-        /* FIX: Force text to be BLACK inside the white boxes */
-        .stMarkdown, .stHeader {{
+        
+        /* --- GENERAL TEXT VISIBILITY --- */
+        /* Forces text to be BLACK inside white boxes */
+        .stMarkdown, .stHeader, .stCaption {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
             color: black !important;
         }}
+        
+        /* --- DROPDOWN & EXPANDER FIXES --- */
         .streamlit-expanderHeader {{
             background-color: rgba(255, 255, 255, 0.9) !important;
             color: black !important;
@@ -35,6 +39,25 @@ def add_bg_from_local(image_file):
             border-radius: 10px;
             color: black !important;
         }}
+        
+        /* --- QUIZ SPECIFIC FIXES (NEW IN V2.8) --- */
+        /* Radio Button Text */
+        .stRadio label {{
+            color: black !important;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.7); /* Slight background for readability */
+            padding: 5px;
+            border-radius: 5px;
+        }}
+        /* The container for the radio options */
+        div[role="radiogroup"] {{
+            color: black !important;
+        }}
+        /* Info/Success/Error Boxes (The Hints & Results) */
+        .stAlert {{
+            color: black !important;
+        }}
+        
         </style>
         """,
         unsafe_allow_html=True
@@ -85,7 +108,6 @@ if check_password():
         # --- TAB 1: SEARCH BY RAGA ---
         with tab1:
             st.header("Find Songs by Raga")
-            # FIX: Added .strip() here to remove trailing spaces
             search_input = st.text_input("Type a Raga Name (e.g., 'Kalyani')", placeholder="Type here...")
             search_term = search_input.strip()
 
@@ -127,7 +149,6 @@ if check_password():
         # --- TAB 2: SEARCH BY SONG ---
         with tab2:
             st.header("Find Raga by Song")
-            # FIX: Added .strip() here as well for safety
             song_input = st.text_input("Type a Song Name (e.g., 'Sundari')", placeholder="Type song title...")
             song_search = song_input.strip()
             
@@ -193,6 +214,7 @@ if check_password():
 
                 st.info("👇 Keep scrolling for hints!")
                 with st.expander("💡 Need a Hint?"):
+                    # The radio button options should now be visible thanks to the CSS fix
                     user_guess = st.radio("Pick one:", st.session_state['quiz_options'], index=None, key="quiz_radio")
                     if user_guess:
                         if user_guess == correct_raga:
