@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 4.0 (The Safety Grey Fix) ---
+# --- STYLE FUNCTION: VERSION 4.1 (The "Readable List" Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -24,55 +24,44 @@ def add_bg_from_local(image_file):
             color: #00008B !important; 
         }}
 
-        /* --- THE SAFETY FIX: INPUTS & DROPDOWNS --- */
-        /* We force these to be GREY BACKGROUND with BLACK TEXT */
+        /* --- THE FIX: INPUTS vs DROPDOWNS --- */
         
-        /* 1. The box where you type */
+        /* 1. The Typing Box (Keep this White & Blue) */
         input {{
-            background-color: #E0E0E0 !important; /* Light Grey */
-            color: #000000 !important; /* Black */
+            background-color: #ffffff !important;
+            color: #00008B !important;
         }}
-        
-        /* 2. The container for the input */
         .stTextInput > div > div {{
-            background-color: #E0E0E0 !important;
-            color: #000000 !important;
+            background-color: #ffffff !important;
+            color: #00008B !important;
         }}
         
-        /* 3. The Dropdown Box (Before clicking) */
-        div[data-baseweb="select"] > div {{
-            background-color: #E0E0E0 !important;
-            color: #000000 !important;
-        }}
+        /* 2. THE DROPDOWN LIST (The Pop-up Menu) */
+        /* We FORCE this to be Black Background + White Text */
+        /* This ensures readability even if the phone forces Dark Mode */
         
-        /* 4. The Text inside the Dropdown */
-        div[data-baseweb="select"] span {{
-            color: #000000 !important; /* Force Black */
-        }}
-        
-        /* 5. The POPUP MENU (The list that opens) */
         div[data-baseweb="popover"] {{
-            background-color: #E0E0E0 !important;
+            background-color: #000000 !important; /* Black */
         }}
         ul[data-baseweb="menu"] {{
-            background-color: #E0E0E0 !important;
+            background-color: #000000 !important; /* Black */
         }}
         
-        /* 6. The Options inside the list */
+        /* Options inside the list */
         li[role="option"] {{
-            background-color: #E0E0E0 !important;
-            color: #000000 !important; /* Black text */
+            background-color: #000000 !important; /* Black */
+            color: #ffffff !important; /* WHITE TEXT */
         }}
         
-        /* 7. Text inside the options */
+        /* Force text INSIDE the options to be WHITE */
         li[role="option"] div, li[role="option"] span {{
-            color: #000000 !important;
+            color: #ffffff !important; 
         }}
         
-        /* 8. Selected/Hovered Option */
+        /* Highlight Color (When you press an option) */
         li[role="option"][aria-selected="true"] {{
-            background-color: #D3D3D3 !important; /* Slightly darker grey */
-            color: #000000 !important;
+            background-color: #333333 !important; /* Dark Grey */
+            color: #ffffff !important;
         }}
 
         /* --- REST OF THE DESIGN --- */
@@ -95,6 +84,9 @@ def add_bg_from_local(image_file):
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 10px;
+        }}
+        div[role="radiogroup"] p {{
+            color: #00008B !important;
         }}
         
         /* Expanders */
