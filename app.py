@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 2.8 (Includes Quiz Fixes) ---
+# --- STYLE FUNCTION: VERSION 2.9 (High Contrast Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -21,7 +21,7 @@ def add_bg_from_local(image_file):
         
         /* --- GENERAL TEXT VISIBILITY --- */
         /* Forces text to be BLACK inside white boxes */
-        .stMarkdown, .stHeader, .stCaption {{
+        .stMarkdown, .stHeader, .stCaption, .stText {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
@@ -40,20 +40,21 @@ def add_bg_from_local(image_file):
             color: black !important;
         }}
         
-        /* --- QUIZ SPECIFIC FIXES (NEW IN V2.8) --- */
-        /* Radio Button Text */
-        .stRadio label {{
+        /* --- QUIZ SPECIFIC FIXES (AGGRESSIVE) --- */
+        /* Force Radio Button Options to be Black */
+        .stRadio div [data-testid="stMarkdownContainer"] p {{
             color: black !important;
-            font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.7); /* Slight background for readability */
-            padding: 5px;
-            border-radius: 5px;
+            font-weight: 500;
         }}
-        /* The container for the radio options */
+        
+        /* Background for the Radio Group to ensure contrast */
         div[role="radiogroup"] {{
-            color: black !important;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 10px;
         }}
-        /* Info/Success/Error Boxes (The Hints & Results) */
+
+        /* Info/Success/Error Boxes */
         .stAlert {{
             color: black !important;
         }}
@@ -214,7 +215,6 @@ if check_password():
 
                 st.info("👇 Keep scrolling for hints!")
                 with st.expander("💡 Need a Hint?"):
-                    # The radio button options should now be visible thanks to the CSS fix
                     user_guess = st.radio("Pick one:", st.session_state['quiz_options'], index=None, key="quiz_radio")
                     if user_guess:
                         if user_guess == correct_raga:
