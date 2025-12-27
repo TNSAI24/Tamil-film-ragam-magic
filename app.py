@@ -6,13 +6,13 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 3.4 (Blue Theme + Syntax Fix) ---
+# --- STYLE FUNCTION: VERSION 3.5 (Split Part 1) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
         
-        # We use a variable for CSS to avoid syntax errors
+        # CSS STYLING
         css_code = f"""
         <style>
         .stApp {{
@@ -25,25 +25,19 @@ def add_bg_from_local(image_file):
             color: #00008B !important; /* Dark Blue */
         }}
 
-        /* --- INPUT FIELDS & DROPDOWNS (White Background Fix) --- */
+        /* --- INPUT FIELDS & DROPDOWNS --- */
         input {{
             color: #00008B !important;
             background-color: #ffffff !important;
         }}
-        
-        /* Text Input Containers */
         .stTextInput > div > div {{
             background-color: #ffffff !important;
             color: #00008B !important;
         }}
-
-        /* Dropdown/Selectbox Containers */
         div[data-baseweb="select"] > div {{
             background-color: #ffffff !important;
             color: #00008B !important;
         }}
-        
-        /* Dropdown Text */
         div[data-baseweb="select"] span {{
             color: #00008B !important;
         }}
@@ -145,7 +139,7 @@ if check_password():
                     unique_ragas = results['The Ragam'].unique()
                     for raga_name in unique_ragas:
                         subset = results[results['The Ragam'] == raga_name]
-                        # THIS IS THE LINE THAT WAS BROKEN IN THE PREVIOUS VERSION
+                        # THIS IS WHERE IT WAS CUTTING OFF
                         with st.expander(f"🎼 **{raga_name}** ({len(subset)} songs)", expanded=False):
                             song_titles = subset['The Song'].tolist()
                             selected_song_title = st.selectbox(
