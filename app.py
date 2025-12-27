@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 3.0 (Blue Theme) ---
+# --- STYLE FUNCTION: VERSION 3.1 (Universal Blue) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -19,25 +19,38 @@ def add_bg_from_local(image_file):
             background-size: cover;
         }}
         
-        /* --- GLOBAL TEXT COLOR: DARK BLUE --- */
-        /* Targets Titles, Headers, Paragraphs, Captions */
-        .stMarkdown, .stHeader, .stCaption, .stText, h1, h2, h3, p, label, span {{
+        /* --- UNIVERSAL BLUE TEXT --- */
+        /* This targets headings, paragraphs, labels, spans, divs, and list items */
+        h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
             color: #00008B !important; /* Dark Blue */
         }}
+
+        /* --- INPUT FIELDS (The text you type) --- */
+        input {{
+            color: #00008B !important;
+            -webkit-text-fill-color: #00008B !important; /* Safari/Chrome fix */
+            caret-color: #00008B !important; /* The blinking cursor */
+        }}
         
+        /* --- DROPDOWNS & SELECTBOXES --- */
+        /* Forces the text inside the selection box to be blue */
+        div[data-baseweb="select"] div {{
+            color: #00008B !important;
+        }}
+
         /* --- BACKGROUND BOXES --- */
-        /* Keeps the white background for readability, but text is now Blue */
-        .stMarkdown, .stHeader, .stCaption, .stText {{
+        /* White background, Blue Text */
+        .stMarkdown, .stHeader, .stCaption, .stText, .stTextInput {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
             border-radius: 10px;
         }}
         
-        /* --- TAB HEADERS (The Specific Request) --- */
+        /* --- TAB HEADERS --- */
         button[data-baseweb="tab"] {{
-            color: #00008B !important; /* Dark Blue */
+            color: #00008B !important;
             font-weight: bold !important;
-            background-color: rgba(255, 255, 255, 0.6) !important; /* Slight white backing */
+            background-color: rgba(255, 255, 255, 0.6) !important;
         }}
         
         /* --- QUIZ & RADIO BUTTONS --- */
@@ -46,27 +59,20 @@ def add_bg_from_local(image_file):
             padding: 15px;
             border-radius: 10px;
         }}
-        div[role="radiogroup"] p, 
-        div[role="radiogroup"] div, 
-        div[role="radiogroup"] span, 
-        div[role="radiogroup"] label {{
-            color: #00008B !important; /* Dark Blue */
-            font-weight: 600;
-        }}
-
-        /* --- DROPDOWNS & EXPANDERS --- */
+        
+        /* --- EXPANDERS --- */
         .streamlit-expanderHeader {{
             background-color: rgba(255, 255, 255, 0.9) !important;
-            color: #00008B !important; /* Dark Blue */
+            color: #00008B !important;
             border-radius: 10px;
         }}
         .stExpander {{
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
-            color: #00008B !important; /* Dark Blue */
+            color: #00008B !important;
         }}
         
-        /* Info/Success/Error Boxes - Keep text dark */
+        /* --- ALERTS (Info/Success/Error) --- */
         .stAlert {{
             color: #00008B !important;
         }}
