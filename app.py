@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 4.4 (Golden Cream Fix) ---
+# --- STYLE FUNCTION: VERSION 5.0 (High Contrast Dark Mode) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -19,59 +19,60 @@ def add_bg_from_local(image_file):
             background-size: cover;
         }}
         
-        /* HEADERS (Keep Blue) */
-        h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
+        /* GENERAL HEADERS (Keep Blue) */
+        h1, h2, h3, h4, h5, h6, p, label, a {{
             color: #00008B !important; 
         }}
 
-        /* --- THE GOLDEN CREAM FIX --- */
-        /* We use Light Yellow (#FFFACD) to prevent Dark Mode inversion */
-        
+        /* --- THE FIX: EMBRACE THE DARKNESS --- */
+        /* We force all input boxes to be BLACK BACKGROUND with BRIGHT WHITE TEXT */
+        /* This works perfectly with mobile Dark Mode */
+
         /* 1. INPUT BOXES (Typing areas) */
         input {{
-            background-color: #FFFACD !important; /* Lemon Chiffon */
-            color: #000000 !important; /* Black */
-            font-weight: 500;
+            background-color: #000000 !important; /* Black */
+            color: #ffffff !important; /* White */
         }}
         .stTextInput > div > div {{
-            background-color: #FFFACD !important;
-            color: #000000 !important;
+            background-color: #000000 !important;
+            color: #ffffff !important;
         }}
 
-        /* 2. THE STUBBORN DROPDOWN BOX */
+        /* 2. THE DROPDOWN BOX (Closed) */
         div[data-baseweb="select"] > div {{
-            background-color: #FFFACD !important; /* Lemon Chiffon */
-            color: #000000 !important; /* Black */
-            border: 1px solid #c0c0c0;
+            background-color: #000000 !important; /* Black */
+            color: #ffffff !important; /* White */
+            border: 1px solid #ffffff; /* White border to see it clearly */
         }}
         
-        /* 3. Text inside the dropdown */
+        /* 3. FORCE TEXT INSIDE DROPDOWN TO BE WHITE */
         div[data-baseweb="select"] span {{
-            color: #000000 !important;
+            color: #ffffff !important;
         }}
         /* The Down Arrow */
         div[data-baseweb="select"] svg {{
-            fill: #000000 !important;
+            fill: #ffffff !important;
         }}
         
-        /* 4. THE POPUP LIST */
+        /* 4. THE POPUP LIST (Open) */
         div[data-baseweb="popover"] {{
-            background-color: #FFFACD !important;
+            background-color: #000000 !important;
         }}
         ul[data-baseweb="menu"] {{
-            background-color: #FFFACD !important;
+            background-color: #000000 !important;
         }}
         li[role="option"] {{
-            background-color: #FFFACD !important;
-            color: #000000 !important;
+            background-color: #000000 !important;
+            color: #ffffff !important;
         }}
+        /* Force text inside options to be White */
         li[role="option"] div, li[role="option"] span {{
-            color: #000000 !important;
+            color: #ffffff !important;
         }}
         /* Hover Effect */
         li[role="option"][aria-selected="true"] {{
-            background-color: #F0E68C !important; /* Khaki */
-            color: #000000 !important;
+            background-color: #333333 !important; /* Dark Grey */
+            color: #ffffff !important;
         }}
 
         /* REST OF DESIGN */
@@ -80,6 +81,7 @@ def add_bg_from_local(image_file):
             padding: 10px;
             border-radius: 10px;
         }}
+        /* Ensure tab text is visible */
         button[data-baseweb="tab"] {{
             color: #00008B !important;
             font-weight: bold !important;
@@ -89,6 +91,10 @@ def add_bg_from_local(image_file):
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 10px;
+        }}
+        /* Force radio button text to be blue */
+        div[role="radiogroup"] p {{
+            color: #00008B !important;
         }}
         .streamlit-expanderHeader {{
             background-color: rgba(255, 255, 255, 0.9) !important;
