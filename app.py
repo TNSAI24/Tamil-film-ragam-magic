@@ -6,7 +6,7 @@ import base64
 # 1. PAGE SETUP
 st.set_page_config(page_title="Tamil Film Ragam Magic", layout="wide", page_icon="🎵")
 
-# --- STYLE FUNCTION: VERSION 4.2 (Closed Box Fix) ---
+# --- STYLE FUNCTION: VERSION 4.3 (Platinum Grey Fix) ---
 def add_bg_from_local(image_file):
     try:
         with open(image_file, "rb") as image_file:
@@ -19,57 +19,66 @@ def add_bg_from_local(image_file):
             background-size: cover;
         }}
         
-        /* GENERAL HEADERS (Blue) */
+        /* UNIVERSAL BLUE TEXT (Headers, Labels, etc.) */
         h1, h2, h3, h4, h5, h6, p, label, span, div, li, a {{
             color: #00008B !important; 
         }}
 
-        /* --- THE FIX: UNIFIED DARK DROPDOWN --- */
+        /* --- THE PLATINUM GREY FIX --- */
+        /* We use a soft grey background with solid BLACK text for all inputs */
         
-        /* 1. The Closed Box (The glitch you saw) */
-        /* We force this to be Black Background + WHITE Text */
-        div[data-baseweb="select"] > div {{
-            background-color: #000000 !important; /* Black */
-            color: #ffffff !important; /* White */
-        }}
-        div[data-baseweb="select"] span {{
-            color: #ffffff !important; /* White Text */
-        }}
-        /* The arrow icon */
-        div[data-baseweb="select"] svg {{
-            fill: #ffffff !important;
-        }}
-
-        /* 2. The Open List (Already fixed) */
-        div[data-baseweb="popover"] {{
-            background-color: #000000 !important;
-        }}
-        ul[data-baseweb="menu"] {{
-            background-color: #000000 !important;
-        }}
-        li[role="option"] {{
-            background-color: #000000 !important;
-            color: #ffffff !important;
-        }}
-        li[role="option"] div, li[role="option"] span {{
-            color: #ffffff !important;
-        }}
-        li[role="option"][aria-selected="true"] {{
-            background-color: #333333 !important;
-            color: #ffffff !important;
-        }}
-
-        /* 3. The Typing Input (Keep White/Blue) */
+        /* 1. The Box where you type (Input) */
         input {{
-            background-color: #ffffff !important;
-            color: #00008B !important;
+            background-color: #E8E8E8 !important; /* Platinum Grey */
+            color: #000000 !important; /* Solid Black */
+            font-weight: 500;
         }}
         .stTextInput > div > div {{
-            background-color: #ffffff !important;
-            color: #00008B !important;
+            background-color: #E8E8E8 !important;
+            color: #000000 !important;
+        }}
+        
+        /* 2. The Dropdown Box (Closed State) */
+        div[data-baseweb="select"] > div {{
+            background-color: #E8E8E8 !important; /* Platinum Grey */
+            color: #000000 !important; /* Solid Black */
+            border: 1px solid #d0d0d0; /* Subtle border for definition */
+        }}
+        
+        /* 3. Force ALL text inside the dropdown to be BLACK */
+        div[data-baseweb="select"] span {{
+            color: #000000 !important;
+        }}
+        div[data-baseweb="select"] div {{
+            color: #000000 !important;
+        }}
+        /* The Down Arrow Icon */
+        div[data-baseweb="select"] svg {{
+            fill: #000000 !important;
         }}
 
-        /* REST OF DESIGN */
+        /* 4. The Dropdown List (Open State) */
+        div[data-baseweb="popover"] {{
+            background-color: #E8E8E8 !important;
+        }}
+        ul[data-baseweb="menu"] {{
+            background-color: #E8E8E8 !important;
+        }}
+        li[role="option"] {{
+            background-color: #E8E8E8 !important;
+            color: #000000 !important;
+        }}
+        /* Text inside options */
+        li[role="option"] div, li[role="option"] span {{
+            color: #000000 !important;
+        }}
+        /* Hover/Selected State */
+        li[role="option"][aria-selected="true"] {{
+            background-color: #D3D3D3 !important; /* Darker Grey */
+            color: #000000 !important;
+        }}
+
+        /* --- REST OF THE DESIGN --- */
         .stMarkdown, .stHeader, .stCaption, .stText, .stTextInput {{
             background-color: rgba(255, 255, 255, 0.9);
             padding: 10px;
